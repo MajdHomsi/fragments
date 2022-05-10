@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/MajdHomsi/fragments/issues"
   },
-  "homepage": "https://github.com/MajdHomsi/fragments#readme"
+  "homepage": "https://github.com/MajdHomsi/fragments#readme",
+  "devDependencies": {
+    "prettier": "2.6.2"
+  }
 }
