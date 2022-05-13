@@ -7,7 +7,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --config .eslintrc.js src/**"
-    
   },
   "repository": {
     "type": "git",
@@ -31,5 +30,4 @@
     "pino-http": "^7.0.0",
     "pino-pretty": "^7.6.1"
   }
-  
 }
