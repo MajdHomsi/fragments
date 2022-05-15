@@ -10,4 +10,3 @@ Command to use to launch WSL2: wsl -d <distroName>
 2- **npm start** | start runs the json file of the project that it is reading from. 
 3- **npm run dev** | running dev compiles the entire project that it is reading from and makes it possible to inspect potential errors in the dev tools feature in the console of a browser. All the changes are also viewable activly while npm run dev is running
 4- **npm run debug** | This script requires setup before it can be used which is connecting a debugger to the running process of the server. It will help debugging by passing the names of the functions. Refernce LAB01 https://github.com/humphd/cloud-computing-for-programmers-summer-2022/tree/main/labs/lab-01
-
