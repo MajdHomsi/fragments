@@ -3,7 +3,7 @@ API server Setup
 
 # Running WSL2
 WSL2 is a Windows subsystem for Linux and can run various Windows commands using Linux architecture. to run it in terminal, simply install a distro through Microsoft Store and the latest version of WSL2 by following https://www.windowscentral.com/how-install-wsl2-windows-10. 
-Command to use to launch WSL2: wsl -d <distroName>
+Command to use to launch WSL2: **wsl -d "distroName"**
 
 # Instructions On How to Run The Following Strtup Scripts and Their Purpose:-
 1- **npm run lint** | lint is responsible to run the program and analyse the code written by identifying possible errors found in the  code
