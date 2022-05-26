@@ -42,7 +42,6 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-unit-tests:
   name: Unit Tests
   runs-on: ubuntu-latest
   steps:
