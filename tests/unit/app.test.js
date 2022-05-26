@@ -1,3 +1,5 @@
+// A test using supertest that causes a 404 to occur
+
 const request = require('supertest');
 const app = require('../../src/app');
 
