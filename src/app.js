@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const passport = require('passport');
 const authorization = require('./authorization');
+const { createErrorResponse } = require('./response');
 
 // // version and author from our package.json file
 // const { version, author } = require('../package.json');
@@ -55,7 +56,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   // We may already have an error response we can use, but if not, use a generic
   // 500 server error and message.
-  const status = err.status || 500;
+  let status = err.status || 500;
   const message = err.message || 'unable to process request';
 
   // If this is a server error, log something so we can see what's going on.
@@ -63,14 +64,15 @@ app.use((err, req, res, next) => {
     logger.error({ err }, `Error processing request`);
   }
 
-  res.status(status).json({
-    status: 'error',
-    error: {
-      message,
-      code: status,
-    },
-  });
+  res.status(status).json(
+    createErrorResponse({
+      status: 'error',
+      error: {
+        message,
+        code: status,
+      },
+    })
+  );
 });
-
 // Export our `app` so we can access it in server.js
 module.exports = app;
