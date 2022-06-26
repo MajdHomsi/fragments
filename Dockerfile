@@ -22,7 +22,8 @@ WORKDIR /app
 COPY package*.json /app/
 
 # Install node dependencies defined in package-lock.json
-RUN npm install
+#RUN npm install
+RUN npm ci -only=production
 
 # Copy src to /app/src/
 COPY ./src ./src
