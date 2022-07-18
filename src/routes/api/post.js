@@ -1,23 +1,24 @@
 const { Fragment } = require('../../model/fragment');
 const { createSuccessResponse, createErrorResponse } = require('../../response');
-
 const logger = require('../../logger');
+require('dotenv').config();
 
 module.exports = async (req, res) => {
   let fragment;
   const api = process.env.API_URL;
-  try {
+  if (Buffer.isBuffer(req.body) === true) {
     fragment = new Fragment({
       ownerId: req.user,
-      type: req.get('Content-Type'),
+      type: req.get('content-type'),
       size: req.body.length,
     });
     await fragment.save();
     await fragment.setData(req.body);
     res.location(`${api}/v1/fragments/${fragment.id}`);
     res.status(201).json(createSuccessResponse({ fragment }));
-    logger.info({ fragment: fragment }, `Fragment Posted`);
-  } catch (err) {
-    res.status(415).json(createErrorResponse(415, 'Unsupported content type', err));
+    logger.info({ fragment: fragment }, `Successfully Posted Fragment `);
+  } else {
+    res.status(415).json(createErrorResponse(415, 'not supported type'));
+    logger.info(`Unable to Post Fragment`);
   }
 };

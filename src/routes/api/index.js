@@ -1,12 +1,11 @@
-const express = require('express');
-
-const router = express.Router();
-
+// src/routes/api/index.js
 const { Fragment } = require('../../model/fragment');
 const contentType = require('content-type');
 
-router.get('/fragments', require('./get'));
+const express = require('express');
+const { get, info } = require('./get.js');
 
+const router = express.Router();
 const rawBody = () =>
   express.raw({
     inflate: true,
@@ -18,5 +17,10 @@ const rawBody = () =>
   });
 
 router.post('/fragments', rawBody(), require('./post'));
+
+router.get('/fragments', get);
+router.get('/fragments/:id/info', info);
+router.get('/fragments/?expand', get);
+router.get('/fragments/:id', get);
 
 module.exports = router;

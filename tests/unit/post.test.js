@@ -1,14 +1,11 @@
 const request = require('supertest');
 const app = require('../../src/app');
-
 const { readFragment } = require('../../src/model/data');
 
 describe('POST /v1/fragments', () => {
   test('unauthenticated requests are denied', () => request(app).post('/v1/fragments').expect(401));
-
   test('incorrect credentials are denied', () =>
     request(app).post('/v1/fragments').auth('invalid@email.com', 'incorrect_password').expect(401));
-
   test('authenticated users post a fragment', async () => {
     const res = await request(app)
       .post('/v1/fragments')
@@ -23,11 +20,11 @@ describe('POST /v1/fragments', () => {
     const res = await request(app)
       .post('/v1/fragments')
       .send('this is fragment 1')
-      .set('Content-type', 'application/javascript')
+      .set('Content-type', 'img/png')
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(415);
     expect(res.body.status).toBe('error');
-    expect(res.body.error.message).toBe('Unsupported content type');
+    expect(res.body.error.message).toBe('not supported type');
   });
 
   test('responses include all necessary and expected properties', async () => {
@@ -38,16 +35,5 @@ describe('POST /v1/fragments', () => {
       .auth('user2@email.com', 'password2');
     const fragment = await readFragment(res.body.fragment.ownerId, res.body.fragment.id);
     expect(res.body.fragment).toEqual(fragment);
-  });
-
-  test('post text/plain; charset=utf-8', async () => {
-    const res = await request(app)
-      .post('/v1/fragments')
-      .send('this is fragment 2')
-      .set('Content-type', 'text/plain; charset=utf-8')
-      .auth('user1@email.com', 'password1');
-    const fragment = await readFragment(res.body.fragment.ownerId, res.body.fragment.id);
-    expect(res.body.fragment).toEqual(fragment);
-    expect(res.statusCode).toBe(201);
   });
 });
