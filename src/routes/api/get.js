@@ -1,11 +1,13 @@
 const { createSuccessResponse, createErrorResponse } = require('../../response');
 const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
-require('dotenv').config();
-var MarkdownIt = require('markdown-it'),
-  md = new MarkdownIt();
 
-let fragment, fragmentM;
+require('dotenv').config();
+
+var MarkdownIt = require('markdown-it'),
+  markD = new MarkdownIt();
+
+let fragment, fragmentMarkD;
 module.exports = {
   get: async (req, res) => {
     if (req.user) {
@@ -13,14 +15,14 @@ module.exports = {
         if (req.params.id) {
           let fragmentId = req.params.id.toString().split('.');
           try {
-            fragmentM = await Fragment.byId(req.user, fragmentId[0]);
-            fragment = await fragmentM.getData();
+            fragmentMarkD = await Fragment.byId(req.user, fragmentId[0]);
+            fragment = await fragmentMarkD.getData();
             if (fragmentId.length > 1) {
               let ext = fragmentId[1];
               if (ext == 'html') {
-                if (fragmentM.type == 'text/markdown') {
+                if (fragmentMarkD.type == 'text/markdown') {
                   res.set('Content-Type', 'text/html');
-                  var result = md.render(fragment.toString());
+                  var result = markD.render(fragment.toString());
                   res.status(200).send(result);
                   logger.info({ targetType: ext }, `Successfully Convert To ${ext}`);
                 } else {
@@ -30,10 +32,10 @@ module.exports = {
                 }
               }
             } else {
-              res.set('Content-Type', fragmentM.type);
+              res.set('Content-Type', fragmentMarkD.type);
               res.status(200).send(fragment);
               logger.info(
-                { fragmentData: fragment, contentType: fragmentM.type },
+                { fragmentData: fragment, contentType: fragmentMarkD.type },
                 `Successfully Get Fragment Data`
               );
             }
