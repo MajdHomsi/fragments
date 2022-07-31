@@ -7,6 +7,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - HTPASSWD_FILE=tests/.htpasswd
+      - AWS_REGION=us-east-1
       # Use whatever LOG_LEVEL is set to, or `info` as a default if not set
       - LOG_LEVEL=${LOG_LEVEL:-info}
       # Allow the following variables to be forwarded into the container from the env if set
