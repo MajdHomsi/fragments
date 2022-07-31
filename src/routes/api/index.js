@@ -21,5 +21,6 @@ router.get('/fragments', get);
 router.get('/fragments/:id/info', info);
 router.get('/fragments/?expand', get);
 router.get('/fragments/:id', get);
+router.delete('/fragments/:id', require('./delete'));
 
 module.exports = router;
