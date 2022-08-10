@@ -1,4 +1,4 @@
-# tests/integration/lab-9-s3.hurl
+# tests/integration/lab-10-dynamodb .hurl
 
 # 1. POST a new text fragment to http://localhost:8080 as an authorized user. The fragment's body should be the string, Hello S3!
 POST http://localhost:8080/v1/fragments

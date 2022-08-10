@@ -33,19 +33,14 @@ class Fragment {
       } else throw Error('Unsupported type');
 
       if (size) {
-        if (Number.isInteger(size) && (Math.sign(size) === 0 || Math.sign(size) === 1)) {
+        if (Number.isInteger(size) && Math.sign(size) >= 0) {
           this.size = size;
         } else throw Error('Invalid size');
-      } else this.size = 0;
-
+      }
       this.id = id ? id : nanoid();
       this.ownerId = ownerId;
-      if (!created || Object.keys(created).length === 0) {
-        this.created = new Date().toISOString();
-      } else this.created = created;
-      if (!updated || Object.keys(updated).length === 0) {
-        this.updated = new Date().toISOString();
-      } else this.updated = updated;
+      this.created = created ? new Date(created).toISOString() : new Date().toISOString();
+      this.updated = updated ? new Date(updated).toISOString() : new Date().toISOString();
     } else throw Error('Missing ownerId and or type');
   }
 
@@ -58,7 +53,6 @@ class Fragment {
   static async byUser(ownerId, expand = false) {
     return listFragments(ownerId, expand);
   }
-
   /**
    * Gets a fragment for the user by the given id.
    * @param {string} ownerId user's hashed email

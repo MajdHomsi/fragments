@@ -16,11 +16,12 @@ module.exports = {
           let fragmentId = req.params.id.toString().split('.');
           try {
             fragmentMarkD = await Fragment.byId(req.user, fragmentId[0]);
-            fragment = await fragmentMarkD.getData();
+            fragment = new Fragment({ ...fragmentMarkD });
+            fragment = await fragment.getData();
             if (fragmentId.length > 1) {
               let ext = fragmentId[1];
               if (ext == 'html') {
-                if (fragmentMarkD.type == 'text/markdown') {
+                if (fragment.type == 'text/markdown') {
                   res.set('Content-Type', 'text/html');
                   var result = markD.render(fragment.toString());
                   res.status(200).send(result);
@@ -32,17 +33,26 @@ module.exports = {
                 }
               }
             } else {
-              res.set('Content-Type', fragmentMarkD.type);
-              res.status(200).send(fragment);
+              res.status(200).json({
+                ...createSuccessResponse({
+                  fragment: fragment,
+                  type: fragment.type,
+                }),
+              });
               logger.info(
-                { fragmentData: fragment, contentType: fragmentMarkD.type },
+                { fragmentData: fragment, contentType: fragment.type },
                 `Successfully Get Fragment Data`
               );
             }
           } catch (err) {
             res
               .status(404)
-              .json(createErrorResponse(404, `id Specified Does Not Represent a Valid Fragment`));
+              .json(
+                createErrorResponse(
+                  404,
+                  `id Specified Does Not Represent a Valid Fragment + ${err}`
+                )
+              );
           }
         } else {
           try {
@@ -50,7 +60,7 @@ module.exports = {
           } catch (err) {
             res.status(404).json(createErrorResponse(404, 'No Such User Found'));
           }
-          res.status(200).json(createSuccessResponse({ fragments: fragment }));
+          res.status(200).json(...createSuccessResponse({ fragments: fragment }));
           logger.info({ fragmentList: fragment }, `Successfully Get Fragment List`);
         }
       }
