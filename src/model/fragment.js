@@ -33,10 +33,10 @@ class Fragment {
       } else throw Error('Unsupported type');
 
       if (size) {
-        if (Number.isInteger(size) && Math.sign(size) >= 0) {
+        if (Number.isInteger(size) && (Math.sign(size) === 0 || Math.sign(size) === 1)) {
           this.size = size;
         } else throw Error('Invalid size');
-      }
+      } else this.size = 0;
       this.id = id ? id : nanoid();
       this.ownerId = ownerId;
       this.created = created ? new Date(created).toISOString() : new Date().toISOString();

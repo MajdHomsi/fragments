@@ -60,7 +60,11 @@ module.exports = {
           } catch (err) {
             res.status(404).json(createErrorResponse(404, 'No Such User Found'));
           }
-          res.status(200).json(...createSuccessResponse({ fragments: fragment }));
+          res.status(200).json({
+            ...createSuccessResponse({
+              fragments: fragment,
+            }),
+          });
           logger.info({ fragmentList: fragment }, `Successfully Get Fragment List`);
         }
       }
