@@ -146,7 +146,6 @@ describe('Fragment class', () => {
     });
 
     test('isText return expected results', () => {
-      // Text fragment
       const fragment = new Fragment({
         ownerId: '1234',
         type: 'text/plain; charset=utf-8',
@@ -249,6 +248,16 @@ describe('Fragment class', () => {
 
       await Fragment.delete('1234', fragment.id);
       expect(() => Fragment.byId('1234', fragment.id)).rejects.toThrow();
+    });
+  });
+  describe('extConvert', () => {
+    test('extConvert jpg to jpeg', async () => {
+      const ext = 'jpg';
+      expect(() => Fragment.extConvert(ext) == 'jpeg');
+    });
+    test('extConvert txt to plain', async () => {
+      const ext = 'txt';
+      expect(() => Fragment.extConvert(ext) == 'plain');
     });
   });
 });
