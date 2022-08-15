@@ -11,8 +11,9 @@ module.exports = {
     let ext = q.ext.split('.').pop();
     try {
       fragMeta = await Fragment.byId(req.user, q.name);
+      fragment = new Fragment({ ...fragMeta });
       ext = fragMeta.extConvert(ext);
-      fragment = await fragMeta.getData();
+      fragment = await fragment.getData();
       if (q.ext == '' || fragMeta.type.endsWith(ext)) {
         res.setHeader('Content-Type', fragMeta.type);
         res.status(200).send(Buffer.from(fragment));
