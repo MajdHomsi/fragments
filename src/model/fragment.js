@@ -3,6 +3,11 @@ const { nanoid } = require('nanoid');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 
+const Markdown = require('markdown-it');
+let md = new Markdown();
+
+const sharp = require('sharp');
+
 // Functions for working with fragment metadata/data using our DB
 const {
   readFragment,
@@ -167,5 +172,67 @@ class Fragment {
   static isSupportedType(value) {
     return Object.values(validTypes).includes(value);
   }
+  /**
+   * Gets the fragment's data from the database
+   * @param {string} value a Content-Type value
+   * @returns result
+   */
+  convert(value) {
+    var result;
+    if (value == '.html') {
+      if (this.type == 'text/markdown') {
+        result = md.render(this.getData().toString());
+      }
+    }
+    return result;
+  }
+  async imgConvert(value) {
+    var result, fragData;
+    fragData = await this.getData();
+
+    if (this.type.startsWith('image')) {
+      if (value == 'gif') {
+        result = await sharp(fragData).gif();
+      } else if (value == 'jpg' || value == 'jpeg') {
+        result = await sharp(fragData).jpeg();
+      } else if (value == 'webp') {
+        result = await sharp(fragData).webp();
+      } else if (value == 'png') {
+        result = await sharp(fragData).png();
+      }
+    }
+    return result.toBuffer();
+  }
+  async txtConvert(value) {
+    var result, fragData;
+    fragData = await this.getData();
+    if (value == 'plain') {
+      if (this.type == 'application/json') {
+        result = JSON.parse(fragData);
+      } else {
+        result = fragData;
+      }
+    } else if (value == 'html') {
+      if (this.type.endsWith('markdown')) {
+        result = md.render(fragData.toString());
+      }
+    }
+    return result;
+  }
+
+  extConvert(value) {
+    var ext;
+    if (value == 'txt') {
+      ext = 'plain';
+    } else if (value == 'jpg') {
+      ext = 'jpeg';
+    } else if (value == 'md') {
+      ext = 'markdown';
+    } else {
+      ext = value;
+    }
+    return ext;
+  }
 }
+
 module.exports.Fragment = Fragment;
