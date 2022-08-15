@@ -1,47 +1,79 @@
-# tests/integration/lab-10-dynamodb .hurl
-
-# 1. POST a new text fragment to http://localhost:8080 as an authorized user. The fragment's body should be the string, Hello S3!
+# tests/integration/lab-10-dynamodb.hurl
+# Authenticated POST to /v1/fragments
 POST http://localhost:8080/v1/fragments
 # user1@email.com:password1
 Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
-Content-Type: text/plain
-```Hello S3!```
+# We're sending a json fragment
+Content-Type: application/json
+{ "service": "DynamoDB" }
 
-# 2. The server returns back a 201 created status code and a location header. The location header should be the URL of the new fragment.
+# We expect to get back an HTTP 201
 HTTP/1.1 201
-[Asserts]
-header "Location" matches "^http:\/\/localhost:8080\/v1\/fragments\/[A-Za-z0-9_-]+$"
-jsonpath "$.status" == "ok"
-jsonpath "$.fragment.id" matches "^[A-Za-z0-9_-]+$"
-jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
-jsonpath "$.fragment.created" isString
-jsonpath "$.fragment.updated" isString
-jsonpath "$.fragment.type" == "text/plain"
-# 9 is the length of our fragment data: 'Hello S3!'
-jsonpath "$.fragment.size" == 9
-# Capture the Location URL into a variable named `url`
+
 [Captures]
-url: header "Location"
+fragment1_url: header "Location"
+fragment1_id: jsonpath "$.fragment.id"
 
-# 3. Try to GET the fragment we just posted by its URL
-GET {{url}}
+GET {{fragment1_url}}/info
 Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 
-# 4. server returns a 200 with the fragment type is text/plain and the fragment data is 'Hello S3!'
 HTTP/1.1 200
-Content-Type: application/json; charset=utf-8
-Content-Length: 84
 [Asserts]
-body == "{\"status\":\"ok\",\"fragment\":{\"type\":\"Buffer\",\"data\":[72,101,108,108,111,32,83,51,33]}}"
+jsonpath "$.id" == {{fragment1_id}}
+jsonpath "$.created" exists 
+jsonpath "$.updated" exists
+jsonpath "$.size" exists
+jsonpath "$.type" == "application/json"
 
-# 5. Delete the fragment using the url as an authorized user
-DELETE {{url}}
+
+POST http://localhost:8080/v1/fragments
+# user1@email.com:password1
+Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
+# We're sending a markdown fragment
+Content-Type: text/markdown
+```DynamoDB is **great**.```
+
+HTTP/1.1 201
+
+[Captures]
+fragment2_url: header "Location"
+fragment2_id: jsonpath "$.fragment.id"
+
+GET {{fragment2_url}}/info
+Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
+
+HTTP/1.1 200
+[Asserts]
+jsonpath "$.id" == {{fragment2_id}}
+jsonpath "$.created" exists 
+jsonpath "$.updated" exists
+jsonpath "$.size" exists
+jsonpath "$.type" == "text/markdown"
+
+# GET all of the fragments for the same authorized user
+GET http://localhost:8080/v1/fragments
+Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
+
+HTTP/1.1 200
+[Asserts]
+jsonpath "$.fragments" includes {{fragment1_id}}
+jsonpath "$.fragments" includes {{fragment2_id}}
+
+# DELETE the first fragment
+DELETE http://localhost:8080/v1/fragments/{{fragment1_id}}
 Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 HTTP/1.1 200
 
-# 6. Try to GET the fragment again using url as an authorized user
-GET {{url}}
+# GET the first fragment again
+GET {{fragment1_url}}
 Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
-
-# server returns a 404 since the fragment no longer exists deleted
+# Confirm that the server returns a 404
 HTTP/1.1 404
+
+# GET all of the fragments for the same authorized user
+GET http://localhost:8080/v1/fragments
+Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
+HTTP/1.1 200
+[Asserts]
+jsonpath "$.fragments" not includes {{fragment1_id}}
+jsonpath "$.fragments" includes {{fragment2_id}}
