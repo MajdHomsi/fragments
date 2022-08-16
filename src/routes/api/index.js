@@ -19,13 +19,13 @@ const rawBody = () =>
 
 router.post('/fragments', rawBody(), require('./post'));
 
+router.put('/fragments/:id', rawBody(), require('./put'));
+
 router.get('/fragments', get);
 router.get('/fragments/:id/info', info);
 router.get('/fragments/?expand', get);
 router.get('/fragments/:id', get_data);
 
 router.delete('/fragments/:id', require('./delete'));
-
-router.put('/fragments/:id', rawBody(), require('./put'));
 
 module.exports = router;
