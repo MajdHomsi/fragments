@@ -32,6 +32,5 @@ Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 HTTP/1.1 200
 
 # Check the content type
-Content-Type: application/json; 
+Content-Type: application/json
 [Asserts]
-body == "{\"status\":\"ok\",\"fragment\":{\"type\":\"Buffer\",\"data\":[123,10,32,32,34,100,97,116,97,34,58,32,34,84,104,105,115,32,105,115,32,97,32,102,114,97,103,109,101,110,116,33,34,10,125]}}"
