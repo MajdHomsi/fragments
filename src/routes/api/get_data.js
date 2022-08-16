@@ -16,7 +16,7 @@ module.exports = {
       fragment = await fragMeta.getData();
       if (q.ext == '' || fragMeta.type.endsWith(ext)) {
         res.setHeader('Content-Type', fragMeta.type);
-        res.status(200).send(Buffer.from(fragment));
+        res.status(200).send({ data: fragment, type: fragMeta.type });
         logger.info(
           { fragmentData: fragment, contentType: fragMeta.type },
           `successfully get fragment data`
@@ -31,7 +31,7 @@ module.exports = {
           } else {
             result = await fragMeta.imgConvert(ext);
             res.setHeader('Content-Type', 'image/' + ext);
-            res.status(200).send(result);
+            res.status(200).send({ data: result, type: ext })(result);
             logger.info({ targetType: ext }, `successfully converted to ${ext}`);
           }
         } catch (err) {
