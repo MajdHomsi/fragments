@@ -8,12 +8,11 @@ module.exports = async (req, res) => {
 
   try {
     fragment = await Fragment.byId(req.user, req.params.id);
+    fragment = new Fragment({ ...fragment });
     if (req.get('content-type') != fragment.type) {
       res
         .status(400)
-        .json(
-          createErrorResponse(400, 'A fragment’s type can not be changed after it is created.')
-        );
+        .json(createErrorResponse(400, 'A fragment type can not be changed after it is created.'));
     } else {
       await fragment.setData(req.body);
       res.location(`${api}/v1/fragments/${fragment.id}`);
