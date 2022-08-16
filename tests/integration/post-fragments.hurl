@@ -36,6 +36,6 @@ Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 
 HTTP/1.1 200
 Content-Type: application/json; charset=utf-8
-Content-Length: 122
+Content-Length: 19
 [Asserts]
 body == "{\"status\":\"ok\",\"fragment\":{\"type\":\"Buffer\",\"data\":[84,104,105,115,32,105,115,32,97,32,102,114,97,103,109,101,110,116,33]}}"
