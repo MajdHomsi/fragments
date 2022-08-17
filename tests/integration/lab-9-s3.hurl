@@ -17,8 +17,7 @@ Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 
 # Confirm that the server returns a 200.
 HTTP/1.1 200
-Content-Type: text/plain
-```Hello S3!```
+Content-Type: text/plain; charset=utf-8
 
 # Try to DELETE the fragment we just posted by its URL
 DELETE {{url}}

@@ -32,5 +32,5 @@ Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 HTTP/1.1 200
 
 # Check the content type
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 [Asserts]
