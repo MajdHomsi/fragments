@@ -8,7 +8,7 @@ let fragment, fragMeta, result;
 module.exports = {
   get_data: async (req, res) => {
     let q = path.parse(req.params.id);
-    let ext = q.ext.split('.').pop();
+    let ext = q.split('.').pop();
     try {
       fragMeta = await Fragment.byId(req.user, q.name);
       fragMeta = new Fragment({ ...fragMeta });
