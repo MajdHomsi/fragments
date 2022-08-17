@@ -8,7 +8,7 @@ let fragment, fragMeta, result;
 module.exports = {
   get_data: async (req, res) => {
     let q = path.parse(req.params.id);
-    let ext = q.split('.').pop();
+    let ext = req.params.ext ? req.params.ext : '';
     try {
       fragMeta = await Fragment.byId(req.user, q.name);
       fragMeta = new Fragment({ ...fragMeta });
@@ -26,7 +26,8 @@ module.exports = {
           if (fragMeta.isText || fragMeta.type == 'application/json') {
             result = await fragMeta.txtConvert(ext);
             res.setHeader('Content-Type', 'text/' + ext);
-            res.status(200).send(Buffer.from(result));
+            res.status(200).send({ result: fragment, type: fragMeta.type });
+            //res.status(200).send(Buffer.from(result));
             logger.info({ targetType: ext }, `successfully converted to ${ext}`);
           } else {
             result = await fragMeta.imgConvert(ext);
