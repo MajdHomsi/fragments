@@ -26,13 +26,13 @@ module.exports = {
           if (fragMeta.isText || fragMeta.type == 'application/json') {
             result = await fragMeta.txtConvert(ext);
             res.setHeader('Content-Type', 'text/' + ext);
-            res.status(200).send({ result: fragment, type: fragMeta.type });
+            res.status(200).send({ result: fragment, type: 'text/' + ext });
             //res.status(200).send(Buffer.from(result));
             logger.info({ targetType: ext }, `successfully converted to ${ext}`);
           } else {
             result = await fragMeta.imgConvert(ext);
             res.setHeader('Content-Type', 'image/' + ext);
-            res.status(200).send({ data: result, type: ext })(result);
+            res.status(200).send({ data: result, type: 'image/' + ext })(result);
             logger.info({ targetType: ext }, `successfully converted to ${ext}`);
           }
         } catch (err) {
