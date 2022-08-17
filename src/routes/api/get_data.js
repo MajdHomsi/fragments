@@ -14,7 +14,7 @@ module.exports = {
       fragMeta = new Fragment({ ...fragMeta });
       ext = fragMeta.extConvert(ext);
       fragment = await fragMeta.getData();
-      if (q.ext == '' || fragMeta.type.endsWith(ext)) {
+      if (ext == '') {
         res.setHeader('Content-Type', fragMeta.type);
         res.status(200).send({ data: fragment, type: fragMeta.type });
         logger.info(
@@ -32,7 +32,7 @@ module.exports = {
           } else {
             result = await fragMeta.imgConvert(ext);
             res.setHeader('Content-Type', 'image/' + ext);
-            res.status(200).send({ data: result, type: 'image/' + ext })(result);
+            res.status(200).send({ data: result, type: 'image/' + ext });
             logger.info({ targetType: ext }, `successfully converted to ${ext}`);
           }
         } catch (err) {
